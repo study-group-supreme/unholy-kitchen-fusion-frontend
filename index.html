@@ -5,11 +5,11 @@
     <title>index</title>
 </head>
 <body>
-<div id="app"></div>
+<div id="app"></div> <!-- [the document.getElementById("app").innerHTML]`finds this div -->
 
-<script src="js/core/state.js"></script>
-<script src="js/core/api.js"></script>
-<script src="js/forms/searchCountries.js"></script>
-<script src="js/core/router.js"></script>
+<script src="js/core/state.js"></script> <!-- state.js, creates [const state]. Global variable -->
+<script src="js/core/api.js"></script> <!-- api.js defined the helpers (apiGet...) -->
+<script src="js/forms/searchCountries.js"></script> <!-- this one defines all our functions rn -->
+<script src="js/core/router.js"></script> <!-- router.js runs last. Calls renderSearchCountriesPage() -->
 </body>
 </html>
