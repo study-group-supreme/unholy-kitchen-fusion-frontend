@@ -1,7 +1,7 @@
 const API_BASE = "http://localhost:8080";
 const MAX_COUNTRIES = 2;
 
-const shownCountries = new Set();
+const shownCountries = new Set(); // selected by user, unique no duplicates
 
 function renderSearchCountriesPage() {
     document.getElementById("app").innerHTML = `
@@ -9,12 +9,15 @@ function renderSearchCountriesPage() {
         <input type="text" id="countryInput" placeholder="Skriv et landenavn">
         <button type="button" id="searchBtn">Search</button>
         <button type="button" id="clearBtn">Ryd</button>
+        <select id="countrySelect"></select>
         <div id="message"></div>
         <div id="result"></div>
     `;
 
     document.getElementById("searchBtn").addEventListener("click", searchCountries);
     document.getElementById("clearBtn").addEventListener("click", clearResults);
+
+    fillDropdown([{code: "DK", name: "Denmark"}, {code: "SE", name: "Sweden"}]) // hardcoded
 }
 
 function clearResults() {
@@ -77,5 +80,16 @@ async function searchCountries() {
     } catch (error) {
         console.error(error);
         message.textContent = "Noget gik galt, se Console for detaljer.";
+    }
+}
+
+function fillDropdown(countries){
+    const select = document.getElementById("countrySelect");
+    select.innerHTML = ""; // empty it first
+    for (const country of countries) {
+        const option = document.createElement("option"); // 1. create the element
+        option.value = country.code; // 2. what the code gets
+        option.textContent = country.name; // 3. what the user reads
+        select.appendChild(option); // 4. put it in the page
     }
 }
