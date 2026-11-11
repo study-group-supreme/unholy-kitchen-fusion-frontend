@@ -1,4 +1,3 @@
-const API_BASE = "http://localhost:8080";
 const MAX_COUNTRIES = 2;
 
 const shownCountries = new Set(); // selected by user, unique no duplicates
@@ -41,7 +40,7 @@ async function searchCountries() {
     }
 
     try {
-        const response = await fetch(`${API_BASE}/api/search?name=${encodeURIComponent(name)}`);
+        const response = await fetch(`${state.apiBaseUrl}/api/search?name=${encodeURIComponent(name)}`);
 
         if (!response.ok) {
             message.textContent = "Ingen lande fundet.";
@@ -105,4 +104,4 @@ function addSelectedCountry() {
     if (state.selectedCountries.length >= MAX_COUNTRIES) return;
     state.selectedCountries.push({code, name});
     console.log(state.selectedCountries);
-}
+} // the array the user picked????
