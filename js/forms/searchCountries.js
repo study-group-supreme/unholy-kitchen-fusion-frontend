@@ -1,4 +1,3 @@
-const API_BASE = "http://localhost:8080"; // The address of our Spring Boot backend. Will break if the backend runs elsewhere.
 const MAX_COUNTRIES = 2;
 
 const shownCountries = new Set(); // used by the SEARCH display, used in searchCountries
