@@ -10,12 +10,14 @@ function renderSearchCountriesPage() {
         <button type="button" id="searchBtn">Search</button>
         <button type="button" id="clearBtn">Ryd</button>
         <select id="countrySelect"></select>
+        <button type="button" id="addBtn">Add country</button>
         <div id="message"></div>
         <div id="result"></div>
     `;
 
     document.getElementById("searchBtn").addEventListener("click", searchCountries);
     document.getElementById("clearBtn").addEventListener("click", clearResults);
+    document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
 
     fillDropdown([{code: "DK", name: "Denmark"}, {code: "SE", name: "Sweden"}]) // hardcoded
 }
@@ -92,4 +94,11 @@ function fillDropdown(countries){
         option.textContent = country.name; // 3. what the user reads
         select.appendChild(option); // 4. put it in the page
     }
+}
+
+function addSelectedCountry(){
+    const select = document.getElementById("countrySelect");
+    const code = select.value; // "DK"
+    const name = select.selectedOptions[0].textContent; // "Denmark"
+    console.log(code, name); // just prints to the log
 }
