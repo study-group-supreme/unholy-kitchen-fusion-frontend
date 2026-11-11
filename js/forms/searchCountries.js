@@ -1,7 +1,6 @@
 const API_BASE = "http://localhost:8080";
 const MAX_COUNTRIES = 2;
 
-// Husker hvilke lande der allerede er vist (på uuid), så der ikke kommer dubletter
 const shownCountries = new Set();
 
 function renderSearchCountriesPage() {
