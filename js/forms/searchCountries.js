@@ -100,5 +100,5 @@ function addSelectedCountry(){
     const select = document.getElementById("countrySelect");
     const code = select.value; // "DK"
     const name = select.selectedOptions[0].textContent; // "Denmark"
-    console.log(code, name); // just prints to the log
+    console.log(code, name); // just prints to the log, we will want to add them to a list
 }
