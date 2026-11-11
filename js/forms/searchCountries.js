@@ -96,9 +96,13 @@ function fillDropdown(countries){
     }
 }
 
-function addSelectedCountry(){
+function addSelectedCountry() {
     const select = document.getElementById("countrySelect");
     const code = select.value; // "DK"
     const name = select.selectedOptions[0].textContent; // "Denmark"
-    console.log(code, name); // just prints to the log, we will want to add them to a list
+    // add to state.selectedCountries
+    // not duplicate/already added check???
+    if (state.selectedCountries.length >= MAX_COUNTRIES) return;
+    state.selectedCountries.push({code, name});
+    console.log(state.selectedCountries);
 }
