@@ -7,9 +7,9 @@ function renderSearchCountriesPage() {
     document.getElementById("app").innerHTML = `
         <h1>Søg efter to landenavne, så du kan lave en fusion</h1>
         <input type="text" id="countryInput" placeholder="Skriv et landenavn">
-        <button type="button" id="searchBtn">Search</button>
+           <select id="countrySelect"></select>
+        <button type="button" id="searchBtn">Søg</button>
         <button type="button" id="clearBtn">Ryd</button>
-        <select id="countrySelect"></select>
         <div id="message"></div>
         <div id="result"></div>
     `;
