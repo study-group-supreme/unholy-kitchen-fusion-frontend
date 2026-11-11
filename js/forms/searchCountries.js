@@ -1,0 +1,81 @@
+const API_BASE = "http://localhost:8080";
+const MAX_COUNTRIES = 2;
+
+const shownCountries = new Set();
+
+function renderSearchCountriesPage() {
+    document.getElementById("app").innerHTML = `
+        <h1>Søg efter to landenavne, så du kan lave en fusion</h1>
+        <input type="text" id="countryInput" placeholder="Skriv et landenavn">
+        <button type="button" id="searchBtn">Search</button>
+        <button type="button" id="clearBtn">Ryd</button>
+        <div id="message"></div>
+        <div id="result"></div>
+    `;
+
+    document.getElementById("searchBtn").addEventListener("click", searchCountries);
+    document.getElementById("clearBtn").addEventListener("click", clearResults);
+}
+
+function clearResults() {
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("message").textContent = "";
+    shownCountries.clear();
+}
+
+async function searchCountries() {
+    const name = document.getElementById("countryInput").value.trim();
+    const result = document.getElementById("result");
+    const message = document.getElementById("message");
+
+    message.textContent = "";
+
+    if (name === "") {
+        message.textContent = "Skriv et landenavn først.";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/search?name=${encodeURIComponent(name)}`);
+
+        if (!response.ok) {
+            message.textContent = "Ingen lande fundet.";
+            return;
+        }
+
+        const json = await response.json();
+        const countries = json.data?.objects ?? [];
+
+        if (countries.length === 0) {
+            message.textContent = "Ingen lande fundet.";
+            return;
+        }
+
+        let limitReached = false;
+
+        for (const country of countries) {
+            if (shownCountries.has(country.uuid)) continue; // dublet
+
+            if (shownCountries.size >= MAX_COUNTRIES) {
+                limitReached = true;
+                break;
+            }
+
+            shownCountries.add(country.uuid);
+
+            const p = document.createElement("p");
+            const flag = country.flag?.emoji ?? "";
+            const countryName = country.names?.common ?? "Ukendt";
+            const capital = country.capitals?.[0]?.name ?? "ingen hovedstad";
+            p.textContent = `${flag} ${countryName} - ${capital}`;
+            result.appendChild(p);
+        }
+
+        if (limitReached) {
+            message.textContent = `Der kan maks vises ${MAX_COUNTRIES} lande. Tryk Ryd for at starte forfra.`;
+        }
+    } catch (error) {
+        console.error(error);
+        message.textContent = "Noget gik galt, se Console for detaljer.";
+    }
+}
