@@ -7,7 +7,7 @@ const shownCountries = new Set(); // used by the SEARCH display, used in searchC
  *
  */
 function renderSearchCountriesPage() {
-    document.getElementById("app").innerHTML = `
+    document.getElementById("page").innerHTML = `
         <h1>Søg efter to landenavne, så du kan lave en fusion</h1>
         <input type="text" id="countryInput" placeholder="Skriv et landenavn">
         <button type="button" id="searchBtn">Search</button>
