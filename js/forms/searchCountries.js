@@ -14,6 +14,7 @@ function renderSearchCountriesPage() {
         <button type="button" id="clearBtn">Ryd</button>
         <select id="countrySelect"></select>
         <button type="button" id="addBtn">Add country</button>
+        <button type="button" id="clearSelectionBtn">Clear selection</button>
         <ul id="selectedList"></ul>
         <div id="message"></div>
         <div id="result"></div>
@@ -23,6 +24,7 @@ function renderSearchCountriesPage() {
     document.getElementById("searchBtn").addEventListener("click", searchCountries);
     document.getElementById("clearBtn").addEventListener("click", clearResults);
     document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
+    document.getElementById("clearSelectionBtn").addEventListener("click", clearSelection);
 
     // calls fillDropdown with an array of a couple names
     loadCountries(); // hardcoded
@@ -141,6 +143,15 @@ function addSelectedCountry() {
     if (state.selectedCountries.length >= MAX_COUNTRIES) return;
     state.selectedCountries.push({code, name}); // adds to our frontend list of contries
     renderSelectedCountries();
+}
+
+/**
+ * Empties the user's chosen countries and updates the page. (the dropdown choices)
+ * Changes the state first, and then redraws the screem from the state.
+ */
+function clearSelection() {
+    state.selectedCountries.length = 0; // empties the SA;E in memory array object
+    renderSelectedCountries(); // loops over am empty array so the list becomes empty
 }
 
 /**
