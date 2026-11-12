@@ -24,7 +24,7 @@ function renderSearchCountriesPage() {
     document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
 
     // calls fillDropdown with an array of a couple names
-    fillDropdown([{code: "DK", name: "Denmark"}, {code: "SE", name: "Sweden"}]) // hardcoded
+  loadCountries() // hardcoded
 }
 
 /**
@@ -140,4 +140,27 @@ function addSelectedCountry() {
     if (state.selectedCountries.length >= MAX_COUNTRIES) return;
     state.selectedCountries.push({code, name}); // adds to our frontend list of contries
     console.log(state.selectedCountries); // puts the list in the browser console log
+}
+async function loadCountries() {
+    try {
+        const response = await fetch(`${state.apiBaseUrl}/api/all`);
+        if (!response.ok) {
+            document.getElementById("message").textContent = "Could not load countries.";
+            return;
+        }
+
+        const json = await response.json(); // array af {names, flag, subregion}
+
+        const countries = json
+            .map(c => ({
+                code: c.names?.common,
+                name: c.names?.common
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+        fillDropdown(countries);
+    } catch (error) {
+        console.error(error);
+        document.getElementById("message").textContent = "Something went wrong, check console for info";
+    }
 }
