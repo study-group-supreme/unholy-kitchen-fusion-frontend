@@ -69,8 +69,7 @@ async function searchCountries() {
             return;
         }
 
-        const json = await response.json();
-        const countries = json.data?.objects ?? [];
+        const countries = await response.json(); // [{names:{common}, flag:{url_png}, subregion}]
 
         if (countries.length === 0) {
             message.textContent = "No countries found.";
@@ -131,7 +130,7 @@ function addSelectedCountry() {
 
 /**
  * Empties the user's chosen countries and updates the page. (the dropdown choices)
- * Changes the state first, and then redraws the screem from the state.
+ * Changes the state first, and then redraws the screen from the state.
  */
 function clearSelection() {
     state.selectedCountries.length = 0; // empties the SA;E in memory array object
