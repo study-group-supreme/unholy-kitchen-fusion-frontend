@@ -18,6 +18,8 @@ function renderSearchCountriesPage() {
         <ul id="selectedList"></ul>
         <div id="message"></div>
         <div id="result"></div>
+        <button type="button" id="generateBtn">Generate recipe</button>
+        <div id="recipe"></div>
     `;
 
     // event listeners, "when button clicked, call this function"
@@ -25,6 +27,7 @@ function renderSearchCountriesPage() {
     document.getElementById("clearBtn").addEventListener("click", clearResults);
     document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
     document.getElementById("clearSelectionBtn").addEventListener("click", clearSelection);
+    document.getElementById("generateBtn").addEventListener("click", generateRecipe);
 
     // calls fillDropdown with an array of a couple names
     loadCountries(); // hardcoded
