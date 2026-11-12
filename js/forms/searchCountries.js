@@ -76,20 +76,7 @@ async function searchCountries() {
             return;
         }
 
-        const countryName = countries[0].names?.common;
-
-        if (state.selectedCountries.length >= MAX_COUNTRIES) {
-            message.textContent = `Max ${MAX_COUNTRIES} countries. Press clear selection to try again`;
-            return;
-        }
-
-        if (state.selectedCountries.some(c => c.name === countryName)) {
-            message.textContent = "Country already added";
-            return;
-        }
-
-        state.selectedCountries.push({ name: countryName });
-        renderSelectedCountries();
+        addCountry(countries[0].names?.common);
     } catch (error) {
         console.error(error);
         message.textContent = "Something went wrong. Check console for info";
