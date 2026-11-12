@@ -8,10 +8,10 @@ const shownCountries = new Set(); // used by the SEARCH display, used in searchC
  */
 function renderSearchCountriesPage() {
     document.getElementById("page").innerHTML = `
-        <h1>Søg efter to landenavne, så du kan lave en fusion</h1>
-        <input type="text" id="countryInput" placeholder="Skriv et landenavn">
+        <h1>Select to country names to make a fusion</h1>
+        <input type="text" id="countryInput" placeholder="Write the name of a country">
         <button type="button" id="searchBtn">Search</button>
-        <button type="button" id="clearBtn">Ryd</button>
+        <button type="button" id="clearBtn">Clear</button>
         <select id="countrySelect"></select>
         <button type="button" id="addBtn">Add country</button>
         <button type="button" id="clearSelectionBtn">Clear selection</button>
@@ -58,7 +58,7 @@ async function searchCountries() {
     message.textContent = ""; // will clear any old message
 
     if (name === "") { // if the input is empty, show a hint and return, === is strictly equality (also compares type); so not quite the same as ==
-        message.textContent = "Skriv et landenavn først.";
+        message.textContent = "Write the name of a country first";
         return; // ends the function so no request is sent.
     }
 
@@ -72,7 +72,7 @@ async function searchCountries() {
 
         // response.ok is true for status 200-299
         if (!response.ok) {
-            message.textContent = "Ingen lande fundet.";
+            message.textContent = "No countries found.";
             return;
         }
 
@@ -81,7 +81,7 @@ async function searchCountries() {
 
         // a successful answer with zero hits
         if (countries.length === 0) {
-            message.textContent = "Ingen lande fundet.";
+            message.textContent = "No countries found.";
             return;
         }
 
@@ -101,18 +101,18 @@ async function searchCountries() {
 
             const p = document.createElement("p"); // create a <p> element in memory.
             const flag = country.flag?.emoji ?? ""; // try reading the [country.flag?.emoji] element from the nested object, "" as the fallback
-            const countryName = country.names?.common ?? "Ukendt"; // try reading [country.names?.common] or "Ukent" as fallback
-            const capital = country.capitals?.[0]?.name ?? "ingen hovedstad"; // try reading [country.capitals?.[0]?.name] or "ingen hovedstad" as fallback"
+            const countryName = country.names?.common ?? "Unknown"; // try reading [country.names?.common] or "Ukent" as fallback
+            const capital = country.capitals?.[0]?.name ?? "No capital"; // try reading [country.capitals?.[0]?.name] or "ingen hovedstad" as fallback"
             p.textContent = `${flag} ${countryName} - ${capital}`; // fill the <p> with text content.
             result.appendChild(p); // puts the <p> element in the page. Now it will be visible.
         }
 
         if (limitReached) {
-            message.textContent = `Der kan maks vises ${MAX_COUNTRIES} lande. Tryk Ryd for at starte forfra.`;
+            message.textContent = `The max countries ${MAX_COUNTRIES} reached. Press clear to try again`;
         }
     } catch (error) { // catch runs if anything inside [try] THROWS: bug in the code, invalid JSON, CORS blocked, backend not running
         console.error(error); // writes to the browser console
-        message.textContent = "Noget gik galt, se Console for detaljer.";
+        message.textContent = "Something went wrong. Check console for info";
     }
 }
 
