@@ -62,7 +62,7 @@ async function searchCountries() {
         // [encodeURIComponent] makes the text safe in a URL: space becomes %20, å becomes %C3%A5, & can't break the query
         // [await] pauses here until the response HEADERS arrive.
         // this all results in a [Response] object
-        const response = await fetch(`${API_BASE}/api/search?name=${encodeURIComponent(name)}`);
+        const response = await fetch(`${state.apiBaseUrl}/api/search?name=${encodeURIComponent(name)}`);
 
         // response.ok is true for status 200-299
         if (!response.ok) {
