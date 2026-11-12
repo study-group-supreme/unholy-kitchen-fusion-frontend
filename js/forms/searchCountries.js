@@ -97,7 +97,7 @@ async function searchCountries() {
 }
 
 /**
- * takes an array of {code, name}
+ * takes an array of {name}
  * Empties the select,
  * and for each country create an <option>,
  * set [value] and [textContent], and append it.
