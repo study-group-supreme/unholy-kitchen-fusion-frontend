@@ -114,6 +114,17 @@ function fillDropdown(countries){
     }
 }
 
+function addCountry(name){
+    if (!name) return; // it means: if the dropdown is empty, has no name, the backend is down and something is wrong
+    if (state.selectedCountries.length >= MAX_COUNTRIES) {
+        document.getElementById("message").textContent =
+            `Max ${MAX_COUNTRIES} countries. Press clear selection to try again`;
+        return;
+    }
+    state.selectedCountries.push({name});
+    renderSelectedCountries();
+}
+
 /**
  * For keeping a list of countries from the dropdown choices
  */
