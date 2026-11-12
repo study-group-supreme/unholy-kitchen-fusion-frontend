@@ -16,12 +16,15 @@ function renderSearchCountriesPage() {
         <button type="button" id="addBtn">Add country</button>
         <div id="message"></div>
         <div id="result"></div>
+        <button type="button" id="generateBtn">Generate recipe</button>
+        <div id="recipe"></div>
     `;
 
     // event listeners, "when button clicked, call this function"
     document.getElementById("searchBtn").addEventListener("click", searchCountries);
     document.getElementById("clearBtn").addEventListener("click", clearResults);
     document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
+    document.getElementById("generateBtn").addEventListener("click", generateRecipe);
 
     // calls fillDropdown with an array of a couple names
     fillDropdown([{code: "DK", name: "Denmark"}, {code: "SE", name: "Sweden"}]) // hardcoded
