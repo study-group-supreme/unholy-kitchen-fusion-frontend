@@ -1,6 +1,5 @@
 const MAX_COUNTRIES = 2;
 
-const shownCountries = new Set(); // used by the SEARCH display, used in searchCountries
 
 /**
  * document.getElementById("app").innerHTML finds the "app"-div in index.html
