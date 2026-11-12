@@ -14,6 +14,7 @@ function renderSearchCountriesPage() {
         <button type="button" id="clearBtn">Ryd</button>
         <select id="countrySelect"></select>
         <button type="button" id="addBtn">Add country</button>
+        <ul id="selectedList"></ul>
         <div id="message"></div>
         <div id="result"></div>
     `;
@@ -24,7 +25,7 @@ function renderSearchCountriesPage() {
     document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
 
     // calls fillDropdown with an array of a couple names
-  loadCountries() // hardcoded
+    loadCountries(); // hardcoded
 }
 
 /**
@@ -139,8 +140,23 @@ function addSelectedCountry() {
     // not duplicate/already added check???
     if (state.selectedCountries.length >= MAX_COUNTRIES) return;
     state.selectedCountries.push({code, name}); // adds to our frontend list of contries
-    console.log(state.selectedCountries); // puts the list in the browser console log
+    renderSelectedCountries();
 }
+
+/**
+ * The page will show the array in state.selectedCountries
+ * (This is what has been selected from the dropdown)
+ */
+function renderSelectedCountries(){
+    const list = document.getElementById("selectedList"); // the <ul> from the template
+    list.innerHTML = ""; // empty the list, so old items arent displayed
+    for (const country of state.selectedCountries) {
+        const li = document.createElement("li"); // create a <li> list item in memory
+        li.textContent = country.name;
+        list.appendChild(li);
+    }
+}
+
 async function loadCountries() {
     try {
         const response = await fetch(`${state.apiBaseUrl}/api/all`);
