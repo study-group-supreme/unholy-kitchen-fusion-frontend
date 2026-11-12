@@ -14,6 +14,8 @@ function renderSearchCountriesPage() {
         <button type="button" id="clearBtn">Ryd</button>
         <select id="countrySelect"></select>
         <button type="button" id="addBtn">Add country</button>
+        <button type="button" id="clearSelectionBtn">Clear selection</button>
+        <ul id="selectedList"></ul>
         <div id="message"></div>
         <div id="result"></div>
     `;
@@ -22,9 +24,10 @@ function renderSearchCountriesPage() {
     document.getElementById("searchBtn").addEventListener("click", searchCountries);
     document.getElementById("clearBtn").addEventListener("click", clearResults);
     document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
+    document.getElementById("clearSelectionBtn").addEventListener("click", clearSelection);
 
     // calls fillDropdown with an array of a couple names
-  loadCountries() // hardcoded
+    loadCountries(); // hardcoded
 }
 
 /**
@@ -62,7 +65,7 @@ async function searchCountries() {
         // [encodeURIComponent] makes the text safe in a URL: space becomes %20, å becomes %C3%A5, & can't break the query
         // [await] pauses here until the response HEADERS arrive.
         // this all results in a [Response] object
-        const response = await fetch(`${API_BASE}/api/search?name=${encodeURIComponent(name)}`);
+        const response = await fetch(`${state.apiBaseUrl}/api/search?name=${encodeURIComponent(name)}`);
 
         // response.ok is true for status 200-299
         if (!response.ok) {
@@ -139,8 +142,32 @@ function addSelectedCountry() {
     // not duplicate/already added check???
     if (state.selectedCountries.length >= MAX_COUNTRIES) return;
     state.selectedCountries.push({code, name}); // adds to our frontend list of contries
-    console.log(state.selectedCountries); // puts the list in the browser console log
+    renderSelectedCountries();
 }
+
+/**
+ * Empties the user's chosen countries and updates the page. (the dropdown choices)
+ * Changes the state first, and then redraws the screem from the state.
+ */
+function clearSelection() {
+    state.selectedCountries.length = 0; // empties the SA;E in memory array object
+    renderSelectedCountries(); // loops over am empty array so the list becomes empty
+}
+
+/**
+ * The page will show the array in state.selectedCountries
+ * (This is what has been selected from the dropdown)
+ */
+function renderSelectedCountries(){
+    const list = document.getElementById("selectedList"); // the <ul> from the template
+    list.innerHTML = ""; // empty the list, so old items arent displayed
+    for (const country of state.selectedCountries) {
+        const li = document.createElement("li"); // create a <li> list item in memory
+        li.textContent = country.name;
+        list.appendChild(li);
+    }
+}
+
 async function loadCountries() {
     try {
         const response = await fetch(`${state.apiBaseUrl}/api/all`);
