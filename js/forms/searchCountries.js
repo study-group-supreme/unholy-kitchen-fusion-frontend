@@ -83,12 +83,12 @@ async function searchCountries() {
             return;
         }
 
-        if (state.selectedCountries.some(c => c.code === countryName)) {
+        if (state.selectedCountries.some(c => c.name === countryName)) {
             message.textContent = "Country already added";
             return;
         }
 
-        state.selectedCountries.push({ code: countryName, name: countryName });
+        state.selectedCountries.push({ name: countryName });
         renderSelectedCountries();
     } catch (error) {
         console.error(error);
@@ -108,7 +108,7 @@ function fillDropdown(countries){
     select.innerHTML = ""; // empty it first
     for (const country of countries) {
         const option = document.createElement("option"); // 1. create the element
-        option.value = country.code; // (the hidden value the code reads) "DK"
+        option.value = country.name; // (the hidden value the code reads)
         option.textContent = country.name; // the name the user sees
         select.appendChild(option); // put it in the page dropdown
     }
@@ -119,12 +119,9 @@ function fillDropdown(countries){
  */
 function addSelectedCountry() {
     const select = document.getElementById("countrySelect"); // connects to [<select id="countrySelect"></select>] in renderSearchCountriesPage()
-    const code = select.value; // (the hidden value the code reads) "DK"
-    const name = select.selectedOptions[0].textContent; // "Denmark"
-    // add to state.selectedCountries
-    // not duplicate/already added check???
+    const name = select.value;
     if (state.selectedCountries.length >= MAX_COUNTRIES) return;
-    state.selectedCountries.push({code, name}); // adds to our frontend list of contries
+    state.selectedCountries.push({name});
     renderSelectedCountries();
 }
 
@@ -163,7 +160,6 @@ async function loadCountries() {
 
         const countries = json
             .map(c => ({
-                code: c.names?.common,
                 name: c.names?.common
             }))
             .sort((a, b) => a.name.localeCompare(b.name));
