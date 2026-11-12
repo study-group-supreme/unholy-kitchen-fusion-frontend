@@ -6,7 +6,7 @@ async function generateRecipe () {
     recipeOutput.textContent = "Generating recipe..";
     generateButton.disabled = true;
 
-    const backendData = await apiPost(`${state.apiBaseUrl}/test/create-recipe`, countries);
+    const backendData = await apiPost(`${state.apiBaseUrl}/api/create-recipe`, countries);
 
     if (backendData === null) {
         recipeOutput.textContent = "Could not generate a recipe. Please try again.";
