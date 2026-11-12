@@ -51,67 +51,48 @@ function clearResults() {
  * @returns {Promise<void>}
  */
 async function searchCountries() {
-    const name = document.getElementById("countryInput").value.trim(); // read what the user typed in [<input type="text" id="countryInput"]  .value.trim removed whitespace, put it into a const
-    const result = document.getElementById("result"); // <div id="message"></div> into a const
-    const message = document.getElementById("message"); // <div id="result"></div> into a const
+    const name = document.getElementById("countryInput").value.trim();
+    const message = document.getElementById("message");
 
-    message.textContent = ""; // will clear any old message
+    message.textContent = "";
 
-    if (name === "") { // if the input is empty, show a hint and return, === is strictly equality (also compares type); so not quite the same as ==
+    if (name === "") {
         message.textContent = "Write the name of a country first";
-        return; // ends the function so no request is sent.
+        return;
     }
 
-    // the request:
     try {
-        // we send a GET to Spring
-        // [encodeURIComponent] makes the text safe in a URL: space becomes %20, å becomes %C3%A5, & can't break the query
-        // [await] pauses here until the response HEADERS arrive.
-        // this all results in a [Response] object
         const response = await fetch(`${state.apiBaseUrl}/api/search?name=${encodeURIComponent(name)}`);
 
-        // response.ok is true for status 200-299
         if (!response.ok) {
             message.textContent = "No countries found.";
             return;
         }
 
-        const json = await response.json(); // Reads the body of the [Response] and parses the JSON text into a JavaScript object.
-        const countries = json.data?.objects ?? []; // Digs into [{ "data": { "objects": [...] } }. ?.], means "if data is missing, stop and give undefined instead of crashing". The double ?? means "if the left side is null/undefined, use the right side", here an empty array. So countries is always an array.
+        const json = await response.json();
+        const countries = json.data?.objects ?? [];
 
-        // a successful answer with zero hits
         if (countries.length === 0) {
             message.textContent = "No countries found.";
             return;
         }
 
-        let limitReached = false; // a flag to remember if we skipped some ?
+        const countryName = countries[0].names?.common;
 
-        // a loop over each country object
-        for (const country of countries) {
-            if (shownCountries.has(country.uuid)) continue; // Already in [shownCountries]? continue skips to the next country.
-
-            // Already 2 in [shownCountries]? break to leave the loop
-            if (shownCountries.size >= MAX_COUNTRIES) {
-                limitReached = true; // this is for the error message that can be shown after this loop
-                break;
-            }
-
-            shownCountries.add(country.uuid); // remember this uuid in [shownCountries]
-
-            const p = document.createElement("p"); // create a <p> element in memory.
-            const flag = country.flag?.emoji ?? ""; // try reading the [country.flag?.emoji] element from the nested object, "" as the fallback
-            const countryName = country.names?.common ?? "Unknown"; // try reading [country.names?.common] or "Ukent" as fallback
-            const capital = country.capitals?.[0]?.name ?? "No capital"; // try reading [country.capitals?.[0]?.name] or "ingen hovedstad" as fallback"
-            p.textContent = `${flag} ${countryName} - ${capital}`; // fill the <p> with text content.
-            result.appendChild(p); // puts the <p> element in the page. Now it will be visible.
+        if (state.selectedCountries.length >= MAX_COUNTRIES) {
+            message.textContent = `Max ${MAX_COUNTRIES} countries. Press clear selection to try again`;
+            return;
         }
 
-        if (limitReached) {
-            message.textContent = `The max countries ${MAX_COUNTRIES} reached. Press clear to try again`;
+        if (state.selectedCountries.some(c => c.code === countryName)) {
+            message.textContent = "Country already added";
+            return;
         }
-    } catch (error) { // catch runs if anything inside [try] THROWS: bug in the code, invalid JSON, CORS blocked, backend not running
-        console.error(error); // writes to the browser console
+
+        state.selectedCountries.push({ code: countryName, name: countryName });
+        renderSelectedCountries();
+    } catch (error) {
+        console.error(error);
         message.textContent = "Something went wrong. Check console for info";
     }
 }
