@@ -8,7 +8,7 @@ const shownCountries = new Set(); // used by the SEARCH display, used in searchC
  */
 function renderSearchCountriesPage() {
     document.getElementById("page").innerHTML = `
-        <h1>Select to country names to make a fusion</h1>
+        <h1>Select two country names to make a fusion</h1>
         <input type="text" id="countryInput" placeholder="Write the name of a country">
         <button type="button" id="searchBtn">Search</button>
         <button type="button" id="clearBtn">Clear</button>
