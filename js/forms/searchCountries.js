@@ -28,9 +28,7 @@ function renderSearchCountriesPage() {
     //document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
     /*
     why lambda function?
-    addEventListener needs a function to call later, and addCountry needs an argument
-    that only exists at click time, so this wraps the call in an arrow function
-    that reads tge dropdown value when clicked. Alternatively is making a handler.
+    arrow function: reads the dropdown value at click time (addCountry(value) would run at page load)
      */
     document.getElementById("addBtn").addEventListener("click", () => {
         addCountry(document.getElementById("countrySelect").value);
