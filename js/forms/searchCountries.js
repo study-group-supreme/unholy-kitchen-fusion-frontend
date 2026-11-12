@@ -121,6 +121,11 @@ function addCountry(name){
             `Max ${MAX_COUNTRIES} countries. Press clear selection to try again`;
         return;
     }
+    if (state.selectedCountries.some(c => c.name === name)){
+        document.getElementById("message").textContent =
+            "Country already added";
+        return;
+    }
     state.selectedCountries.push({name});
     renderSelectedCountries();
 }
