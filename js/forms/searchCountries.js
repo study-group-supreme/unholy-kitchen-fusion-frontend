@@ -25,12 +25,19 @@ function renderSearchCountriesPage() {
     // event listeners, "when button clicked, call this function"
     document.getElementById("searchBtn").addEventListener("click", searchCountries);
     document.getElementById("clearBtn").addEventListener("click", clearResults);
-    document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
+    //document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
+    /*
+    why lambda function?
+    addEventListener needs a function to call later, and addCountry needs an argument
+    that only exists at click time, so this wraps the call in an arrow function
+    that reads tge dropdown value when clicked. Alternatively is making a handler.
+     */
+    document.getElementById("addBtn").addEventListener("click", () => {
+        addCountry(document.getElementById("countrySelect").value);
+    });
     document.getElementById("clearSelectionBtn").addEventListener("click", clearSelection);
     document.getElementById("generateBtn").addEventListener("click", generateRecipe);
-
-    // calls fillDropdown with an array of a couple names
-    loadCountries(); // hardcoded
+    loadCountries();
 }
 
 /**
@@ -101,8 +108,14 @@ function fillDropdown(countries){
     }
 }
 
+/**
+ * for adding a country name to the state.selectedCountries list.
+ * works for both search bar and dropdown
+ * @param name
+ */
 function addCountry(name){
     if (!name) return; // it means: if the dropdown is empty, has no name, the backend is down and something is wrong
+    document.getElementById("message").textContent = ""; // clears any error prior to a hopefully successful add
     if (state.selectedCountries.length >= MAX_COUNTRIES) {
         document.getElementById("message").textContent =
             `Max ${MAX_COUNTRIES} countries. Press clear selection to try again`;
@@ -117,16 +130,6 @@ function addCountry(name){
     renderSelectedCountries();
 }
 
-/**
- * For keeping a list of countries from the dropdown choices
- */
-function addSelectedCountry() {
-    const select = document.getElementById("countrySelect"); // connects to [<select id="countrySelect"></select>] in renderSearchCountriesPage()
-    const name = select.value;
-    if (state.selectedCountries.length >= MAX_COUNTRIES) return;
-    state.selectedCountries.push({name});
-    renderSelectedCountries();
-}
 
 /**
  * Empties the user's chosen countries and updates the page. (the dropdown choices)
