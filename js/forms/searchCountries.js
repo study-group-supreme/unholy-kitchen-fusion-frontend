@@ -1,9 +1,8 @@
 const MAX_COUNTRIES = 2;
 
-const shownCountries = new Set(); // used by the SEARCH display, used in searchCountries
 
 /**
- * document.getElementById("app").innerHTML finds the "app"-div in index.html
+ * document.getElementById("page").innerHTML finds the "app"-div in index.html
  *
  */
 function renderSearchCountriesPage() {
@@ -11,37 +10,29 @@ function renderSearchCountriesPage() {
         <h1>Select two country names to make a fusion</h1>
         <input type="text" id="countryInput" placeholder="Write the name of a country">
         <button type="button" id="searchBtn">Search</button>
-        <button type="button" id="clearBtn">Clear</button>
         <select id="countrySelect"></select>
         <button type="button" id="addBtn">Add country</button>
         <button type="button" id="clearSelectionBtn">Clear selection</button>
         <ul id="selectedList"></ul>
         <div id="message"></div>
-        <div id="result"></div>
         <button type="button" id="generateBtn">Generate recipe</button>
         <div id="recipe"></div>
     `;
 
     // event listeners, "when button clicked, call this function"
     document.getElementById("searchBtn").addEventListener("click", searchCountries);
-    document.getElementById("clearBtn").addEventListener("click", clearResults);
-    document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
+    /*
+    As addCountry needs an argument, a silent error would happen if it runs at page load with nothing in it, and this arrow function prevents it.
+    arrow function: reads the dropdown value at click time (addCountry(value) would run at page load)
+     */
+    document.getElementById("addBtn").addEventListener("click", () => {
+        addCountry(document.getElementById("countrySelect").value);
+    });
     document.getElementById("clearSelectionBtn").addEventListener("click", clearSelection);
     document.getElementById("generateBtn").addEventListener("click", generateRecipe);
-
-    // calls fillDropdown with an array of a couple names
-    loadCountries(); // hardcoded
+    loadCountries();
 }
 
-/**
- * Used with the SEARCH
- * Empties the result area and message text
- */
-function clearResults() {
-    document.getElementById("result").innerHTML = "";
-    document.getElementById("message").textContent = "";
-    shownCountries.clear();
-}
 
 /**
  * async means this function can use await and always returns a Promise.
@@ -69,28 +60,14 @@ async function searchCountries() {
             return;
         }
 
-        const json = await response.json();
-        const countries = json.data?.objects ?? [];
+        const countries = await response.json(); // [{names:{common}, flag:{url_png}, subregion}]
 
         if (countries.length === 0) {
             message.textContent = "No countries found.";
             return;
         }
 
-        const countryName = countries[0].names?.common;
-
-        if (state.selectedCountries.length >= MAX_COUNTRIES) {
-            message.textContent = `Max ${MAX_COUNTRIES} countries. Press clear selection to try again`;
-            return;
-        }
-
-        if (state.selectedCountries.some(c => c.code === countryName)) {
-            message.textContent = "Country already added";
-            return;
-        }
-
-        state.selectedCountries.push({ code: countryName, name: countryName });
-        renderSelectedCountries();
+        addCountry(countries[0].names?.common);
     } catch (error) {
         console.error(error);
         message.textContent = "Something went wrong. Check console for info";
@@ -98,7 +75,7 @@ async function searchCountries() {
 }
 
 /**
- * takes an array of {code, name}
+ * takes an array of {name}
  * Empties the select,
  * and for each country create an <option>,
  * set [value] and [textContent], and append it.
@@ -109,33 +86,44 @@ function fillDropdown(countries){
     select.innerHTML = ""; // empty it first
     for (const country of countries) {
         const option = document.createElement("option"); // 1. create the element
-        option.value = country.code; // (the hidden value the code reads) "DK"
+        option.value = country.name; // (the hidden value the code reads)
         option.textContent = country.name; // the name the user sees
         select.appendChild(option); // put it in the page dropdown
     }
 }
 
 /**
- * For keeping a list of countries from the dropdown choices
+ * for adding a country name to the state.selectedCountries list.
+ * works for both search bar and dropdown
+ * @param name
  */
-function addSelectedCountry() {
-    const select = document.getElementById("countrySelect"); // connects to [<select id="countrySelect"></select>] in renderSearchCountriesPage()
-    const code = select.value; // (the hidden value the code reads) "DK"
-    const name = select.selectedOptions[0].textContent; // "Denmark"
-    // add to state.selectedCountries
-    // not duplicate/already added check???
-    if (state.selectedCountries.length >= MAX_COUNTRIES) return;
-    state.selectedCountries.push({code, name}); // adds to our frontend list of contries
+function addCountry(name){
+    if (!name) return; // it means: if the dropdown is empty, has no name, the backend is down and something is wrong
+    document.getElementById("message").textContent = ""; // clears any error prior to a hopefully successful add
+    if (state.selectedCountries.length >= MAX_COUNTRIES) {
+        document.getElementById("message").textContent =
+            `Max ${MAX_COUNTRIES} countries. Press clear selection to try again`;
+        return;
+    }
+    if (state.selectedCountries.some(c => c.name === name)){
+        document.getElementById("message").textContent =
+            "Country already added";
+        return;
+    }
+    state.selectedCountries.push({name});
     renderSelectedCountries();
 }
 
+
 /**
- * Empties the user's chosen countries and updates the page. (the dropdown choices)
- * Changes the state first, and then redraws the screem from the state.
+ * Empties the user's chosen countries and updates the page.
+ * Changes the state first, and then redraws the screen from the state.
  */
 function clearSelection() {
-    state.selectedCountries.length = 0; // empties the SA;E in memory array object
-    renderSelectedCountries(); // loops over am empty array so the list becomes empty
+    state.selectedCountries.length = 0; // empties the in memory array object
+    renderSelectedCountries(); // loops over an empty array so the list becomes empty
+
+    document.getElementById("message").textContent = "";
 }
 
 /**
@@ -164,7 +152,6 @@ async function loadCountries() {
 
         const countries = json
             .map(c => ({
-                code: c.names?.common,
                 name: c.names?.common
             }))
             .sort((a, b) => a.name.localeCompare(b.name));

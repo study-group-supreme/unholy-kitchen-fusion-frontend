@@ -3,5 +3,5 @@ const state = {
         window.location.hostname === "localhost"
             ? "http://localhost:8080"
             : window.location.origin,
-    selectedCountries: [] // {code, name}
+    selectedCountries: [] // {name}
 };

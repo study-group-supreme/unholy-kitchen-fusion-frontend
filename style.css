@@ -40,8 +40,7 @@ button:hover {
     background: #1d4ed8;
 }
 
-/* clear-knapperne får en neutral farve */
-#clearBtn,
+/* clear-knappen får en neutral farve */
 #clearSelectionBtn {
     background: #6b7280;
 }
@@ -51,9 +50,6 @@ button:hover {
     margin: 8px 0;
 }
 
-#result p {
-    margin: 4px 0;
-}
 
 #selectedList {
     padding-left: 20px;
