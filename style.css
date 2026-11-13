@@ -40,8 +40,7 @@ button:hover {
     background: #1d4ed8;
 }
 
-/* clear-knapperne får en neutral farve */
-#clearBtn,
+/* clear-knappen får en neutral farve */
 #clearSelectionBtn {
     background: #6b7280;
 }
