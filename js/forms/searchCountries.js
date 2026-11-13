@@ -10,23 +10,19 @@ function renderSearchCountriesPage() {
         <h1>Select two country names to make a fusion</h1>
         <input type="text" id="countryInput" placeholder="Write the name of a country">
         <button type="button" id="searchBtn">Search</button>
-        <button type="button" id="clearBtn">Clear</button>
         <select id="countrySelect"></select>
         <button type="button" id="addBtn">Add country</button>
         <button type="button" id="clearSelectionBtn">Clear selection</button>
         <ul id="selectedList"></ul>
         <div id="message"></div>
-        <div id="result"></div>
         <button type="button" id="generateBtn">Generate recipe</button>
         <div id="recipe"></div>
     `;
 
     // event listeners, "when button clicked, call this function"
     document.getElementById("searchBtn").addEventListener("click", searchCountries);
-    document.getElementById("clearBtn").addEventListener("click", clearResults);
-    //document.getElementById("addBtn").addEventListener("click", addSelectedCountry);
     /*
-    why lambda function?
+    As addCountry needs an argument, a silent error would happen if it runs at page load with nothing in it, and this arrow function prevents it.
     arrow function: reads the dropdown value at click time (addCountry(value) would run at page load)
      */
     document.getElementById("addBtn").addEventListener("click", () => {
@@ -37,15 +33,6 @@ function renderSearchCountriesPage() {
     loadCountries();
 }
 
-/**
- * Used with the SEARCH
- * Empties the result area and message text
- */
-function clearResults() {
-    document.getElementById("result").innerHTML = "";
-    document.getElementById("message").textContent = "";
-    shownCountries.clear();
-}
 
 /**
  * async means this function can use await and always returns a Promise.
