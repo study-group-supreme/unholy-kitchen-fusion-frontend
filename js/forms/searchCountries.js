@@ -121,7 +121,7 @@ function addCountry(name){
  */
 function clearSelection() {
     state.selectedCountries.length = 0; // empties the in memory array object
-    renderSelectedCountries(); // loops over am empty array so the list becomes empty
+    renderSelectedCountries(); // loops over an empty array so the list becomes empty
 
     document.getElementById("message").textContent = "";
 }
