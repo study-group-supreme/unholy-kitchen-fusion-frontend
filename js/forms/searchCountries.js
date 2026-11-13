@@ -116,12 +116,14 @@ function addCountry(name){
 
 
 /**
- * Empties the user's chosen countries and updates the page. (the dropdown choices)
+ * Empties the user's chosen countries and updates the page.
  * Changes the state first, and then redraws the screen from the state.
  */
 function clearSelection() {
-    state.selectedCountries.length = 0; // empties the SA;E in memory array object
+    state.selectedCountries.length = 0; // empties the in memory array object
     renderSelectedCountries(); // loops over am empty array so the list becomes empty
+
+    document.getElementById("message").textContent = "";
 }
 
 /**
