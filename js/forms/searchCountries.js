@@ -2,7 +2,7 @@ const MAX_COUNTRIES = 2;
 
 
 /**
- * document.getElementById("app").innerHTML finds the "app"-div in index.html
+ * document.getElementById("page").innerHTML finds the "app"-div in index.html
  *
  */
 function renderSearchCountriesPage() {
